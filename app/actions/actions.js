@@ -10,7 +10,7 @@ async function fetchProducts() {
     {
         id:1,
         title:'Wakefit Orthopedic Memory Foam Mattress',
-        price:'Rs 9999',
+        price:'Rs 9999/-',
         rating:'4.4',
         images:[
             {url : 'https://www.wakefit.co/img/orthopaedic-memory-foam-mattress/orthopaedic-memory-foam-mattress-2.jpg', id : 1},
@@ -24,10 +24,18 @@ async function fetchProducts() {
 
 
 export function getProductsList() {
-    console.log('here')
     return dispatch => {
         fetchProducts().then(resp => {
             dispatch(productsFetchSuccess(resp));
         });
+    }
+}
+
+export function addProductToCheckout(item){
+    return dispatch => {
+        dispatch({
+            type : 'PRODUCT_ADD',
+            resp: item
+        })
     }
 }

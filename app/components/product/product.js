@@ -1,95 +1,125 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
     StatusBar,
-    Button,
-    Image
+    TouchableOpacity,
   } from 'react-native';
 import Carousel from '../carousel';
 import * as  actions from '../../actions/actions';
   
 const productStyle  = StyleSheet.create({
-    body : {
-        padding:10,
-        flex:1,
-    },
-    carousel : {
-         marginBottom:5,
-    },
     container: {
+        margin:4,
         flex: 1,
+        backgroundColor:'yellow',
+        flexDirection:'column'
     },
     carouselContainer: {
         flex:1,
+        backgroundColor:"#fff"
     },
     title:{
         fontSize:20,
         borderRadius:3,
         fontWeight:"500",
+    },
+    price:{
+        fontSize:30,
+        fontWeight:"900"
+    },
+    cartBtn: {
+        backgroundColor:'#3d2277',
+        padding:15,
+        borderRadius:5,
+        alignItems: 'center',
+    },
+    label:{
+        color:'#fff',
+        fontSize:19,
+        fontWeight:'600',
+    },
+    hrzLine: {
+        marginVertical: 8,
+        borderBottomColor: '#737373',
+        borderBottomWidth: StyleSheet.hairlineWidth,
     }
 })
 
 
 class Product extends React.Component {
 
+    static navigationOptions = {
+        title: 'Home',
+            headerStyle: {
+            backgroundColor: '#3d2277',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+      };
+
     componentDidMount = () => {
-        console.log('product');
         const { dispatch } = this.props;
         dispatch(actions.getProductsList());
     }
 
-    componentWillReceiveProps = (nextProps) => {
-        console.log('receving props');
-        console.log(nextProps)
+    proceedToCheckout = () => {
+        const { navigation, dispatch } = this.props;
+        const { productsList } = this.props;
+        const selectedProduct = productsList && Array.isArray(productsList) && productsList[0];
+        selectedProduct && dispatch(actions.addProductToCheckout(selectedProduct))
+        navigation.navigate('Checkout');
     }
 
     renderAddToCart = () => {
         return (
-            <Button 
-                title="Add to Cart"
-                onPress={() => this.props.navigation.navigate('Checkout') }>
-            </Button>
+            <TouchableOpacity 
+                activeOpacity = { .9 }
+                style={productStyle.cartBtn}
+                onPress={this.proceedToCheckout}
+            >
+                    <Text style={productStyle.label}>
+                        Add to Cart
+                    </Text>
+            </TouchableOpacity>
         )
     }
 
     renderCarousel = () => {
         const { productsList } = this.props;
         const selectedProduct = productsList && Array.isArray(productsList) && productsList[0];
-        console.log(selectedProduct);
         return (
             
                 selectedProduct ? 
-                <View>
+                <ScrollView>
                     <Carousel images={selectedProduct.images}/>
+                    <View style={productStyle.hrzLine}></View>
                     <Text style={productStyle.title}>{selectedProduct.title}</Text>
-                    <Text>{selectedProduct.price}</Text>
-                    <Text>{selectedProduct.rating}</Text>
-                </View> : <Text></Text>
+                    <Text style={productStyle.price}>{selectedProduct.price}</Text>
+                </ScrollView> : <Text></Text>
             
         )
     }
 
     render() {
-        
         return (
-            <View style={productStyle.body}>
-                <StatusBar backgroundColor="#000" barStyle="light-content"  />
-                <SafeAreaView style={productStyle.container}>
+            <>
+                <StatusBar backgroundColor="#3d2277" barStyle="light-content" />
+                <View style={productStyle.container}>
                     <View style={productStyle.carouselContainer}>{ this.renderCarousel() }</View>
                     <View style={productStyle.addCartContainer}>{ this.renderAddToCart() }</View>
-                </SafeAreaView>
-            </View>
+                </View>
+            </>
         )
     }
 }
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return { productsList : state.products.list }
 }
 

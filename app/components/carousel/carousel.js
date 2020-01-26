@@ -10,23 +10,20 @@ import {
     Image,
     TouchableOpacity,
     FlatList,
+    Dimensions
 } from 'react-native';
 
 const CarouselStyle = StyleSheet.create({
-    productsList: {
-
-    },
     image : {
         height:50,
         width:50,
     },
     preview: {
-        width:500,
-        height:500,
-        borderRadius:3,
+        flex:1,
+        height:Dimensions.get('window').width,
     },
     previewContainer: {
-        marginBottom:10,
+        flex: 1,
     }
 })
   
@@ -48,9 +45,10 @@ class Carousel extends React.Component{
     }
 
     getImageScrollList = (img) => {
-        console.log('ca',img)
         return (
-            <TouchableOpacity activeOpacity = { .5 } onPress={()=>{this.selectImage(img.index)}}>
+            <TouchableOpacity 
+                activeOpacity = { .5 } 
+                onPress={()=>{this.selectImage(img.index)}}>
                 <Image 
                         source={{uri: img.item.url}} 
                         style={CarouselStyle.image}     
@@ -62,7 +60,6 @@ class Carousel extends React.Component{
 
     
     getCarousel = (images) => {
-        console.log(images);
         return (
             <FlatList 
                 data={images}
@@ -77,24 +74,24 @@ class Carousel extends React.Component{
         const { selectedIndex } = this.state;
         const { images } = this.props;
         const selecttedImage = images && Array.isArray(images) && images[selectedIndex];
-        console.log(selecttedImage);
         return (
-            <Image
-                source={{uri: selecttedImage.url}} 
-                style={CarouselStyle.preview}
-                resizeMode='stretch'  
+                <Image
+                    source={{uri: selecttedImage.url}} 
+                    style={CarouselStyle.preview}
+                    resizeMode='stretch'  
             />
         )
     }
 
 
     render(){
+        
         const { images } = this.props;
         
         return (
             <View>
-                <SafeAreaView style={CarouselStyle.previewContainer}>{this.getselectedIndexView()}</SafeAreaView>
-                <SafeAreaView style={CarouselStyle.productsList}>{this.getCarousel(images)}</SafeAreaView>
+                <View style={CarouselStyle.previewContainer}>{this.getselectedIndexView()}</View>
+                <View style={CarouselStyle.productsList}>{this.getCarousel(images)}</View>
             </View>
         );
         

@@ -8,7 +8,7 @@
     "start": "react-native start --port=9988",
     "test": "jest",
     "lint": "eslint .",
-    "go": "react-native start --port=9988 && cd android && ./gradlew clean && cd .. && react-native run-android --port=9988"
+    "build-apk": "npx react-native run-android --variant=release --port=9988"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.6",
